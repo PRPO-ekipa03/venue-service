@@ -20,6 +20,7 @@ public interface VenueMapper {
 
     // Mapping from CreateVenueDTO to Venue entity for creation
     @Mapping(target = "id", ignore = true)  // ID is auto-generated
+    @Mapping(target = "ownerId", ignore = true) // given by JWT
     @Mapping(target = "averageRating", ignore = true)  // Set by the system
     @Mapping(target = "ratingCount", ignore = true)    // Set by the system
     Venue toEntity(CreateVenueDTO createVenueDTO);

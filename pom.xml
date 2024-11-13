@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>si.uni.prpo.group03</groupId>
 	<artifactId>venue-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>venue-service</name>
 	<description>venue-service</description>
 	<url/>
@@ -85,9 +85,8 @@
 			<version>2.1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>io.github.cdimascio</groupId>
-			<artifactId>java-dotenv</artifactId>
-			<version>5.2.2</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
 		</dependency>
 	</dependencies>
 

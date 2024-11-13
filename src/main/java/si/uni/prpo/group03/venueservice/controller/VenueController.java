@@ -3,7 +3,6 @@ package si.uni.prpo.group03.venueservice.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -20,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/venues")
-@Validated
+@Valid
 public class VenueController {
 
     private final VenueService venueService;
@@ -33,7 +32,7 @@ public class VenueController {
     // Create a new venue
     @PostMapping
     public ResponseEntity<ResponseVenueDTO> createVenue(
-            @RequestBody @Validated CreateVenueDTO venueDTO,
+            @RequestBody @Valid CreateVenueDTO venueDTO,
             @RequestParam(value = "ownerId", defaultValue = "1") Long ownerId) {
         // Pass ownerId to the service layer
         ResponseVenueDTO createdVenue = venueService.createVenue(venueDTO, ownerId);
@@ -44,7 +43,7 @@ public class VenueController {
     @PutMapping("/{venueId}")
     public ResponseEntity<ResponseVenueDTO> updateVenue(
             @PathVariable Long venueId,
-            @RequestBody @Validated UpdateVenueDTO venueDTO) {
+            @RequestBody @Valid UpdateVenueDTO venueDTO) {
         ResponseVenueDTO updatedVenue = venueService.updateVenue(venueId, venueDTO);
         return new ResponseEntity<>(updatedVenue, HttpStatus.OK);
     }

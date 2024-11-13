@@ -8,10 +8,12 @@ import si.uni.prpo.group03.venueservice.dto.CreateReservationDTO;
 import si.uni.prpo.group03.venueservice.dto.UpdateReservationDTO;
 import si.uni.prpo.group03.venueservice.dto.ResponseReservationDTO;
 import si.uni.prpo.group03.venueservice.model.Reservation;
+import si.uni.prpo.group03.venueservice.model.Reservation.ReservationStatus;
 import si.uni.prpo.group03.venueservice.repository.ReservationRepository;
 import si.uni.prpo.group03.venueservice.repository.VenueRepository;
 import si.uni.prpo.group03.venueservice.service.interfaces.ReservationService;
 import si.uni.prpo.group03.venueservice.mapper.ReservationMapper;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 
 import si.uni.prpo.group03.venueservice.exception.ReservationNotFoundException;
 import si.uni.prpo.group03.venueservice.exception.ReservationConflictException;
@@ -20,6 +22,8 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Optional;
+
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -28,6 +32,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final ReservationMapper reservationMapper;
     private static final String RESERVATION_NOT_FOUND = "Reservation not found";
+
     @Autowired
     public ReservationServiceImpl(ReservationRepository reservationRepository, ReservationMapper reservationMapper, VenueRepository venueRepository) {
         this.reservationRepository = reservationRepository;
@@ -106,5 +111,21 @@ public class ReservationServiceImpl implements ReservationService {
                 .stream()
                 .map(reservationMapper::toResponseDTO)
                 .collect(Collectors.toList());
+    }
+
+    @RabbitListener(queues = "paymentConfirmedQueue")
+    public void handlePaymentConfirmed(Long reservationId) {
+        // Update the reservation status based on reservationId
+        // e.g., change status from PENDING to ACTIVE
+        Optional<Reservation> optionalReservation = reservationRepository.findById(reservationId);
+
+        if (optionalReservation.isPresent()) {
+            Reservation reservation = optionalReservation.get();
+            reservation.setStatus(ReservationStatus.ACTIVE);
+            reservationRepository.save(reservation);
+        } else {
+            throw new RuntimeException("Reservation not found for ID: " + reservationId);
+        }
+
     }
 }

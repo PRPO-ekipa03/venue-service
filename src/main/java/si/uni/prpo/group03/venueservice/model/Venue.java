@@ -55,7 +55,7 @@ public class Venue {
     @NotNull(message = "Status must be provided")
     private VenueStatus status;
 
-    @Column(precision = 10, scale = 2) // Precision for currency format
+    @Column(precision = 5, scale = 2) // Precision for currency format
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
     private BigDecimal pricePerDay;
 

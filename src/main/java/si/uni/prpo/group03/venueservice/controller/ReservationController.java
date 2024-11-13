@@ -10,6 +10,8 @@ import si.uni.prpo.group03.venueservice.dto.CreateReservationDTO;
 import si.uni.prpo.group03.venueservice.dto.UpdateReservationDTO;
 import si.uni.prpo.group03.venueservice.dto.ResponseReservationDTO;
 import si.uni.prpo.group03.venueservice.service.interfaces.ReservationService;
+import jakarta.validation.Valid;
+
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -30,7 +32,7 @@ public class ReservationController {
     // Create a new reservation
     @PostMapping
     public ResponseEntity<ResponseReservationDTO> createReservation(
-            @RequestBody @Validated CreateReservationDTO reservationDTO) {
+            @RequestBody @Valid CreateReservationDTO reservationDTO) {
         ResponseReservationDTO createdReservation = reservationService.createReservation(reservationDTO);
         return new ResponseEntity<>(createdReservation, HttpStatus.CREATED);
     }
@@ -39,7 +41,7 @@ public class ReservationController {
     @PutMapping("/{reservationId}")
     public ResponseEntity<ResponseReservationDTO> updateReservation(
             @PathVariable Long reservationId,
-            @RequestBody @Validated UpdateReservationDTO reservationDTO) {
+            @RequestBody @Valid UpdateReservationDTO reservationDTO) {
         ResponseReservationDTO updatedReservation = reservationService.updateReservation(reservationId, reservationDTO);
         return new ResponseEntity<>(updatedReservation, HttpStatus.OK);
     }
