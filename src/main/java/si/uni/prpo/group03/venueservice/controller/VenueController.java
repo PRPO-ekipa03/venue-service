@@ -9,13 +9,19 @@ import jakarta.validation.Valid;
 import si.uni.prpo.group03.venueservice.dto.CreateRatingDTO;
 import si.uni.prpo.group03.venueservice.dto.CreateVenueDTO;
 import si.uni.prpo.group03.venueservice.dto.ResponseRatingDTO;
+import si.uni.prpo.group03.venueservice.dto.ResponseVenueBasicDTO;
 import si.uni.prpo.group03.venueservice.dto.UpdateVenueDTO;
 import si.uni.prpo.group03.venueservice.exception.ConcurrentUpdateException;
 import si.uni.prpo.group03.venueservice.exception.VenueNotFoundException;
+import si.uni.prpo.group03.venueservice.model.Venue;
 import si.uni.prpo.group03.venueservice.dto.ResponseVenueDTO;
 import si.uni.prpo.group03.venueservice.service.interfaces.VenueService;
+import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.sql.Timestamp;
 
 @RestController
 @RequestMapping("/api/venues")
@@ -33,7 +39,11 @@ public class VenueController {
     @PostMapping
     public ResponseEntity<ResponseVenueDTO> createVenue(
             @RequestBody @Valid CreateVenueDTO venueDTO,
-            @RequestParam(value = "ownerId", defaultValue = "1") Long ownerId) {
+            @RequestHeader("X-User-Id") String xUserId
+    ) {
+        // Convert the userId from header to a Long
+        Long ownerId = Long.parseLong(xUserId);
+
         // Pass ownerId to the service layer
         ResponseVenueDTO createdVenue = venueService.createVenue(venueDTO, ownerId);
         return new ResponseEntity<>(createdVenue, HttpStatus.CREATED);
@@ -43,7 +53,8 @@ public class VenueController {
     @PutMapping("/{venueId}")
     public ResponseEntity<ResponseVenueDTO> updateVenue(
             @PathVariable Long venueId,
-            @RequestBody @Valid UpdateVenueDTO venueDTO) {
+            @RequestBody @Valid UpdateVenueDTO venueDTO
+    ) {
         ResponseVenueDTO updatedVenue = venueService.updateVenue(venueId, venueDTO);
         return new ResponseEntity<>(updatedVenue, HttpStatus.OK);
     }
@@ -62,10 +73,12 @@ public class VenueController {
         return new ResponseEntity<>(venue, HttpStatus.OK);
     }
 
-    // Get all venues
     @GetMapping
-    public ResponseEntity<List<ResponseVenueDTO>> getAllVenues() {
-        List<ResponseVenueDTO> venues = venueService.getAllVenues();
+    public ResponseEntity<Page<ResponseVenueBasicDTO>> getAllVenues(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<ResponseVenueBasicDTO> venues = venueService.getAllVenues(page, size);
         return new ResponseEntity<>(venues, HttpStatus.OK);
     }
 
@@ -83,20 +96,21 @@ public class VenueController {
         return new ResponseEntity<>(venues, HttpStatus.OK);
     }
 
+    // Add a rating
     @PostMapping("/{venueId}/ratings")
     public ResponseEntity<ResponseRatingDTO> addRating(
             @PathVariable Long venueId,
             @RequestBody @Valid CreateRatingDTO createRatingDTO,
-            @RequestParam(value = "userId", defaultValue = "1") Long userId) {
-        
+            @RequestHeader("X-User-Id") String xUserId
+    ) {
         try {
-            // Call the service layer to add a rating
+            Long userId = Long.parseLong(xUserId);
             ResponseRatingDTO response = venueService.addRating(venueId, createRatingDTO, userId);
             return ResponseEntity.ok(response);
         } catch (VenueNotFoundException e) {
             return ResponseEntity.status(404).body(null);
         } catch (ConcurrentUpdateException e) {
-            return ResponseEntity.status(409).body(null);  // Conflict status for concurrent update issues
+            return ResponseEntity.status(409).body(null);
         }
     }
 
@@ -104,9 +118,20 @@ public class VenueController {
     public ResponseEntity<List<ResponseRatingDTO>> getRatingsByVenueId(
             @PathVariable Long venueId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        
+            @RequestParam(defaultValue = "10") int size
+    ) {
         List<ResponseRatingDTO> ratings = venueService.getRatingsByVenueId(venueId, page, size);
         return ResponseEntity.ok(ratings);
+    }
+
+    @GetMapping("/available")
+    public ResponseEntity<List<ResponseVenueBasicDTO>> getAvailableVenues(
+            @RequestParam String location,
+            @RequestParam Venue.VenueType venueType,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime reservedDate
+    ) {
+        Timestamp timestamp = Timestamp.valueOf(reservedDate);
+        List<ResponseVenueBasicDTO> venues = venueService.findAvailableVenues(location, venueType, timestamp);
+        return new ResponseEntity<>(venues, HttpStatus.OK);
     }
 }

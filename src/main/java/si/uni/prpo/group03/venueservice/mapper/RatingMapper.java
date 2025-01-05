@@ -20,6 +20,7 @@ public interface RatingMapper {
     // Mapping from Rating and Venue to ResponseRatingDTO
     @Mapping(source = "rating.id", target = "ratingId")
     @Mapping(source = "venue.id", target = "venueId")
+    @Mapping(source = "rating.ratingValue", target = "ratingValue")
     @Mapping(source = "venue.averageRating", target = "newAverageRating")
     @Mapping(source = "venue.ratingCount", target = "newRatingCount")
     @Mapping(source = "rating.comment", target = "comment")

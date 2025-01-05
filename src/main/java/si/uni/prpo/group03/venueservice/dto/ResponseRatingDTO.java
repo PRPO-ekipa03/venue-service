@@ -6,6 +6,8 @@ public class ResponseRatingDTO {
     @NotNull(message = "Id must be sent")
     private Long ratingId;
     private Long venueId;
+    @NotNull(message = "Rating must be given")
+    private Double ratingValue;
     @NotNull(message = "New average must be given")
     private double newAverageRating;
     @NotNull(message = "New rating count must be given")
@@ -20,6 +22,14 @@ public class ResponseRatingDTO {
 
     public void setRatingId(Long ratingId) {
         this.ratingId = ratingId;
+    }
+
+    public Double getRatingValue() {
+        return ratingValue;
+    }
+
+    public void setRatingValue(Double ratingValue) {
+        this.ratingValue = ratingValue;
     }
 
     public Long getVenueId() {

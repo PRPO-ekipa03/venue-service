@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.factory.Mappers;
+import si.uni.prpo.group03.venueservice.dto.ResponseVenueBasicDTO;
 import si.uni.prpo.group03.venueservice.dto.CreateVenueDTO;
 import si.uni.prpo.group03.venueservice.dto.UpdateVenueDTO;
 import si.uni.prpo.group03.venueservice.dto.ResponseVenueDTO;
@@ -34,4 +35,13 @@ public interface VenueMapper {
 
     // Mapping from Venue entity to ResponseVenueDTO
     ResponseVenueDTO toResponseDTO(Venue venue);
+
+    // Mapping from Venue entity to BasicVenueDTO
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "name", source = "name")
+    @Mapping(target = "location", source = "location")
+    @Mapping(target = "description", source = "description")
+    @Mapping(target = "photos", source = "photos")
+    @Mapping(target = "averageRating", source = "averageRating")
+    ResponseVenueBasicDTO toBasicDTO(Venue venue);
 }

@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 public class CreateRatingDTO {
     
     @DecimalMin(value = "0.0", message = "Rating cannot be negative")
-    @DecimalMax(value = "5.0", message = "Rating cannot exceed 5")
+    @DecimalMax(value = "10.0", message = "Rating cannot exceed 10")
     @NotNull(message = "Rating must be given")
     private Double ratingValue;
 

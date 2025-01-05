@@ -7,6 +7,7 @@ import jakarta.persistence.OptimisticLockException;
 import si.uni.prpo.group03.venueservice.dto.CreateRatingDTO;
 import si.uni.prpo.group03.venueservice.dto.CreateVenueDTO;
 import si.uni.prpo.group03.venueservice.dto.ResponseRatingDTO;
+import si.uni.prpo.group03.venueservice.dto.ResponseVenueBasicDTO;
 import si.uni.prpo.group03.venueservice.dto.UpdateVenueDTO;
 import si.uni.prpo.group03.venueservice.dto.ResponseVenueDTO;
 import si.uni.prpo.group03.venueservice.model.Rating;
@@ -23,6 +24,8 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.sql.Timestamp;
+
 
 import si.uni.prpo.group03.venueservice.exception.ConcurrentUpdateException;
 import si.uni.prpo.group03.venueservice.exception.VenueNotFoundException;
@@ -108,11 +111,10 @@ public class VenueServiceImpl implements VenueService {
     }
 
     @Override
-    public List<ResponseVenueDTO> getAllVenues() {
-        return venueRepository.findAll()
-                .stream()
-                .map(venueMapper::toResponseDTO)
-                .collect(Collectors.toList());
+    public Page<ResponseVenueBasicDTO> getAllVenues(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return venueRepository.findAll(pageable)
+                .map(venueMapper::toBasicDTO); // Use the new toBasicDTO mapping method
     }
 
     @Override
@@ -191,5 +193,13 @@ public class VenueServiceImpl implements VenueService {
         return ratingPage.stream()
                 .map(rating -> ratingMapper.toResponseRatingDTO(rating, venue))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ResponseVenueBasicDTO> findAvailableVenues(String location, Venue.VenueType venueType, Timestamp reservedDate) {
+        List<Venue> venues = venueRepository.findAvailableVenues(location, venueType, reservedDate);
+        return venues.stream()
+                    .map(venueMapper::toBasicDTO) // Use the new toBasicDTO method
+                    .collect(Collectors.toList());
     }
 }
