@@ -27,9 +27,21 @@ public class Rating {
     @NotNull(message = "userId must be given")
     private Long userId;
 
+    @NotNull(message = "user fullName must be given")
+    private String fullName;
+
+    @NotNull(message = "")
     private String comment;
 
     private Timestamp timestamp;
+
+    public String getFullName() {
+        return fullName;
+    }
+    
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 
     public Long getId() {
         return id;
