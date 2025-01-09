@@ -20,7 +20,7 @@ public interface VenueService {
     ResponseVenueDTO getVenueById(Long venueId);
     Page<ResponseVenueBasicDTO> getAllVenues(int page, int size);
     List<ResponseVenueDTO> findVenuesByLocation(String location);
-    List<ResponseVenueDTO> findVenuesByOwnerId(Long ownerId);
+    List<ResponseVenueBasicDTO> findVenuesByOwnerId(Long ownerId);
     ResponseRatingDTO addRating(Long venueId, CreateRatingDTO createRatingDTO, Long userId);
     List<ResponseRatingDTO> getRatingsByVenueId(Long venueId, int page, int size);
     List<ResponseVenueBasicDTO> findAvailableVenues(String location, Venue.VenueType venueType, Timestamp reservedDate);

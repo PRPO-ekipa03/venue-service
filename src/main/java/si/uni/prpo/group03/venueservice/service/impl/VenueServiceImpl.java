@@ -132,10 +132,10 @@ public class VenueServiceImpl implements VenueService {
     }
 
     @Override
-    public List<ResponseVenueDTO> findVenuesByOwnerId(Long ownerId) {
+    public List<ResponseVenueBasicDTO> findVenuesByOwnerId(Long ownerId) {
         return venueRepository.findByOwnerId(ownerId)
                 .stream()
-                .map(venueMapper::toResponseDTO)
+                .map(venueMapper::toBasicDTO)
                 .collect(Collectors.toList());
     }
 

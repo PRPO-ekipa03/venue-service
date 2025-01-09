@@ -128,4 +128,15 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
     }
+
+    @Override
+    public List<ResponseReservationDTO> getReservationsByUserId(Long userId) {
+        // Assuming your repository has a method findByUserId
+        List<Reservation> reservations = reservationRepository.findByUserId(userId);
+
+        // Map Reservation entities to DTOs
+        return reservations.stream()
+                           .map(reservationMapper::toResponseDTO)
+                           .collect(Collectors.toList());
+    }
 }

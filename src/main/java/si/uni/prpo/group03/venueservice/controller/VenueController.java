@@ -91,9 +91,11 @@ public class VenueController {
     }
 
     // Find venues by owner ID
-    @GetMapping("/owner/{ownerId}")
-    public ResponseEntity<List<ResponseVenueDTO>> findVenuesByOwnerId(@PathVariable Long ownerId) {
-        List<ResponseVenueDTO> venues = venueService.findVenuesByOwnerId(ownerId);
+    @GetMapping("/owner")
+    public ResponseEntity<List<ResponseVenueBasicDTO>> findVenuesByOwnerId(
+            @RequestHeader("X-User-Id") String xUserId) {
+        Long ownerId = Long.parseLong(xUserId);
+        List<ResponseVenueBasicDTO> venues = venueService.findVenuesByOwnerId(ownerId);
         return new ResponseEntity<>(venues, HttpStatus.OK);
     }
 
