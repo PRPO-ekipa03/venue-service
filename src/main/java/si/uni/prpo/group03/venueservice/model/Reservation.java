@@ -16,6 +16,10 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "user_id", nullable = false)
+    @NotNull(message = "UserId must be given")
+    private Long userId;
+
     @Column(name = "venue_id", nullable = false)
     private Long venueId;  
 
@@ -42,6 +46,14 @@ public class Reservation {
 
     public void setId(Long id) {
         this.id = id;
+    }
+    
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Long getVenueId() {

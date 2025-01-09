@@ -14,12 +14,15 @@ public class ResponseReservationDTO {
     private Long venueId;  // ID of the venue being reserved
 
     @NotNull
+    private Long userId;
+
+    @NotNull
     private Long eventId;  // ID of the event for which the reservation is made
 
     @NotNull
     private Timestamp reservedDate;  // Date of the reservation
 
-    @NotNull
+    
     private ReservationStatus status;  // Status of the reservation (ACTIVE or CANCELED)
 
     // Getters and Setters
@@ -30,6 +33,14 @@ public class ResponseReservationDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Long getVenueId() {

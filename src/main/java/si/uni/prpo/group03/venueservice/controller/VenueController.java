@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.sql.Timestamp;
 
@@ -84,7 +85,7 @@ public class VenueController {
 
     // Find venues by location
     @GetMapping("/search")
-    public ResponseEntity<List<ResponseVenueDTO>> findVenuesByLocation(@RequestParam String location) {
+    public ResponseEntity<List<ResponseVenueDTO>> findVenuidesByLocation(@RequestParam String location) {
         List<ResponseVenueDTO> venues = venueService.findVenuesByLocation(location);
         return new ResponseEntity<>(venues, HttpStatus.OK);
     }
@@ -126,11 +127,14 @@ public class VenueController {
 
     @GetMapping("/available")
     public ResponseEntity<List<ResponseVenueBasicDTO>> getAvailableVenues(
-            @RequestParam String location,
-            @RequestParam Venue.VenueType venueType,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime reservedDate
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) Venue.VenueType venueType,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate reservedDate
     ) {
-        Timestamp timestamp = Timestamp.valueOf(reservedDate);
+        // Convert reservedDate from LocalDateTime to Timestamp, or null if not provided
+        Timestamp timestamp = reservedDate != null 
+        ? Timestamp.valueOf(reservedDate.atStartOfDay()) 
+        : null;
         List<ResponseVenueBasicDTO> venues = venueService.findAvailableVenues(location, venueType, timestamp);
         return new ResponseEntity<>(venues, HttpStatus.OK);
     }

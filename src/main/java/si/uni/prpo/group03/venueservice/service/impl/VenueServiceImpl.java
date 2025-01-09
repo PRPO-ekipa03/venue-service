@@ -22,6 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+
+import si.uni.prpo.group03.venueservice.specifications.VenueSpecifications;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -204,9 +207,16 @@ public class VenueServiceImpl implements VenueService {
 
     @Override
     public List<ResponseVenueBasicDTO> findAvailableVenues(String location, Venue.VenueType venueType, Timestamp reservedDate) {
-        List<Venue> venues = venueRepository.findAvailableVenues(location, venueType, reservedDate);
+ 
+        // Create a Specification based on the provided parameters
+        Specification<Venue> spec = VenueSpecifications.findAvailableVenues(location, venueType, reservedDate);
+
+        // Use findAll with the Specification to retrieve a list of Venue entities
+        List<Venue> venues = venueRepository.findAll(spec);
+
+        // Map each Venue entity to a ResponseVenueBasicDTO using your mapper
         return venues.stream()
-                    .map(venueMapper::toBasicDTO) // Use the new toBasicDTO method
-                    .collect(Collectors.toList());
+                     .map(venueMapper::toBasicDTO)
+                     .collect(Collectors.toList());
     }
 }
