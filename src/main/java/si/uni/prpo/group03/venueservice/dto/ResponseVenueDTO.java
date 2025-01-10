@@ -1,73 +1,87 @@
 package si.uni.prpo.group03.venueservice.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Size;
-
 import si.uni.prpo.group03.venueservice.model.Venue.VenueStatus;
 import si.uni.prpo.group03.venueservice.model.Venue.VenueType;
 
+@Schema(description = "Response Data Transfer Object for venue details.")
 public class ResponseVenueDTO {
 
     @NotNull
+    @Schema(description = "Unique identifier of the venue", example = "1")
     private Long id;
 
     @NotBlank(message = "Venue name is required")
     @Size(max = 100)
+    @Schema(description = "Name of the venue", maxLength = 100, example = "Grand Hall")
     private String name;
 
     @Size(max = 2000)
+    @Schema(description = "Description of the venue", maxLength = 2000, example = "A spacious hall suitable for conferences and events.")
     private String description;
 
     @NotBlank(message = "Location is required")
+    @Schema(description = "Broader location of the venue", example = "Ljubljana")
     private String location;
 
     @NotBlank(message = "Address is required")
+    @Schema(description = "Address of the venue", example = "Preš 10, Ljubljana")
     private String address;
 
     @NotNull(message = "Capacity is required")
     @Min(value = 1, message = "Capacity must be at least 1")
+    @Schema(description = "Capacity of the venue", example = "300")
     private Integer capacity;
 
+    @Schema(description = "List of amenities available at the venue", example = "[\"WiFi\", \"Projector\", \"Sound System\"]")
     private List<String> amenities;
 
     @NotNull(message = "Status must be provided")
+    @Schema(description = "Current status of the venue", example = "AVAILABLE", allowableValues = {"AVAILABLE", "UNAVAILABLE"})
     private VenueStatus status;
 
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
+    @Schema(description = "Price per day for renting the venue", example = "150.00")
     private BigDecimal pricePerDay;
 
+    @Schema(description = "Opening time of the venue", example = "08:00:00")
     private Timestamp openingTime;
 
+    @Schema(description = "Closing time of the venue", example = "22:00:00")
     private Timestamp closingTime;
 
     @Email(message = "Invalid email format")
     @NotBlank(message = "Contact email is required")
+    @Schema(description = "Contact email for the venue", example = "contact@venue.com")
     private String contactEmail;
 
     @Size(max = 15, message = "Contact phone number should not exceed 15 characters")
+    @Schema(description = "Contact phone number for the venue", maxLength = 15, example = "+38640123456")
     private String contactPhone;
 
+    @Schema(description = "List of photo URLs for the venue", example = "[\"http://example.com/photo1.jpg\", \"http://example.com/photo2.jpg\"]")
     private List<String> photos;
 
+    @Schema(description = "Type/category of the venue", example = "CONFERENCE_HALL")
     private VenueType venueType;
 
     @NotNull(message = "Owner ID must be provided")
+    @Schema(description = "Identifier of the owner of the venue", example = "42")
     private Long ownerId;
 
     @DecimalMin(value = "0.0", message = "Average rating cannot be negative")
     @DecimalMax(value = "5.0", message = "Average rating cannot exceed 5")
+    @Schema(description = "Average rating of the venue", example = "4.5")
     private Double averageRating;
 
     @Min(value = 0, message = "Rating count cannot be negative")
+    @Schema(description = "Total number of ratings received by the venue", example = "10")
     private Integer ratingCount;
-
 
     // Getters and Setters
     public Long getId() {
