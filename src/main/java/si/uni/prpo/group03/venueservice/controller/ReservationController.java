@@ -80,4 +80,12 @@ public class ReservationController {
         List<ResponseReservationDTO> reservations = reservationService.getReservationsByDateRange(venueId, startTimestamp, endTimestamp);
         return new ResponseEntity<>(reservations, HttpStatus.OK);
     }
+
+    @GetMapping("/user")
+    public ResponseEntity<List<ResponseReservationDTO>> getReservationsByUserId(
+            @RequestHeader("X-User-Id") String xUserId) {
+        Long userId = Long.parseLong(xUserId);
+        List<ResponseReservationDTO> reservations = reservationService.getReservationsByUserId(userId);
+        return new ResponseEntity<>(reservations, HttpStatus.OK);
+    }
 }

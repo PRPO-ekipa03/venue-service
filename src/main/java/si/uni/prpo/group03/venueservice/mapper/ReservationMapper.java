@@ -21,13 +21,14 @@ public interface ReservationMapper {
 
     // Mapping from CreateReservationDTO to Reservation entity
     @Mapping(target = "id", ignore = true)  // ID is auto-generated
-    @Mapping(target = "status", defaultValue = "ACTIVE")  // Default status is ACTIVE
+    @Mapping(target = "status", defaultValue = "PENDING")  // Default status is ACTIVE
     Reservation toEntity(CreateReservationDTO createReservationDTO);
 
     // Mapping from UpdateReservationDTO to Reservation for partial updates
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "venueId", ignore = true)  // venueId is immutable in this update
     @Mapping(target = "eventId", ignore = true)  // eventId is immutable in this update
+    @Mapping(target = "userId", ignore = true) // userId is immutable in this update
     void updateEntityFromDto(UpdateReservationDTO updateReservationDTO, @MappingTarget Reservation reservation);
 
     // Mapping from Reservation entity to ResponseReservationDTO

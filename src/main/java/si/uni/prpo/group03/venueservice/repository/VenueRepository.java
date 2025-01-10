@@ -1,6 +1,7 @@
 package si.uni.prpo.group03.venueservice.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -10,7 +11,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
-public interface VenueRepository extends JpaRepository<Venue, Long> {
+public interface VenueRepository extends JpaRepository<Venue, Long>, JpaSpecificationExecutor<Venue> {
 
     // Find venues by status (e.g., AVAILABLE or UNAVAILABLE)
     List<Venue> findByStatus(Venue.VenueStatus status);

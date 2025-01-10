@@ -12,10 +12,19 @@ public class ResponseRatingDTO {
     private double newAverageRating;
     @NotNull(message = "New rating count must be given")
     private int newRatingCount;
+    @NotNull(message = "User fullname must be given")
+    private String fullName;
+
     private String comment; // Add comment here
     
+    public String getFullName() {
+        return fullName;
+    }
+    
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 
-    // Getters and Setters
     public Long getRatingId() {
         return ratingId;
     }

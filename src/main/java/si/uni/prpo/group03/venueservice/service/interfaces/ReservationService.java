@@ -15,4 +15,5 @@ public interface ReservationService {
     List<ResponseReservationDTO> getReservationsByVenueId(Long venueId);
     List<Timestamp> getReservationDatesByVenueId(Long venueId);
     List<ResponseReservationDTO> getReservationsByDateRange(Long venueId, Timestamp startDate, Timestamp endDate);
+    List<ResponseReservationDTO> getReservationsByUserId(Long userId);
 }

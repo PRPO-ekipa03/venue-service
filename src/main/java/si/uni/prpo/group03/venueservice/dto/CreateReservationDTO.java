@@ -14,6 +14,9 @@ public class CreateReservationDTO {
     @NotNull(message = "Event ID is required")
     private Long eventId;
 
+    @NotNull(message = "User ID is required")
+    private Long userId;
+
     @NotNull(message = "Reservation date is required")
     private Timestamp reservedDate;
 
@@ -21,6 +24,14 @@ public class CreateReservationDTO {
     private ReservationStatus status = ReservationStatus.PENDING; // Default status as active
 
     // Getters and Setters
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public Long getVenueId() {
         return venueId;

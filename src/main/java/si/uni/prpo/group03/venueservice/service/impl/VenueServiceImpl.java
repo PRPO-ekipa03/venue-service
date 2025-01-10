@@ -15,12 +15,16 @@ import si.uni.prpo.group03.venueservice.model.Venue;
 import si.uni.prpo.group03.venueservice.repository.VenueRepository;
 import si.uni.prpo.group03.venueservice.repository.RatingRepository;
 import si.uni.prpo.group03.venueservice.service.interfaces.VenueService;
+import si.uni.prpo.group03.venueservice.client.UserServiceClient;
 import si.uni.prpo.group03.venueservice.mapper.VenueMapper;
 import si.uni.prpo.group03.venueservice.mapper.RatingMapper;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+
+import si.uni.prpo.group03.venueservice.specifications.VenueSpecifications;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,15 +40,17 @@ public class VenueServiceImpl implements VenueService {
     private final VenueRepository venueRepository;
     private final RatingRepository ratingRepository;
     private final VenueMapper venueMapper;
+    private final UserServiceClient userServiceClient;
     private RatingMapper ratingMapper;
     private static final String VENUE_NOT_FOUND = "Venue not found";
 
     @Autowired
-    public VenueServiceImpl(VenueRepository venueRepository, VenueMapper venueMapper, RatingRepository ratingRepository, RatingMapper ratingMapper) {
+    public VenueServiceImpl(UserServiceClient userServiceClient, VenueRepository venueRepository, VenueMapper venueMapper, RatingRepository ratingRepository, RatingMapper ratingMapper) {
         this.venueRepository = venueRepository;
         this.venueMapper = venueMapper;
         this.ratingMapper = ratingMapper;
         this.ratingRepository = ratingRepository;
+        this.userServiceClient = userServiceClient;
     }
 
     @Override
@@ -126,10 +132,10 @@ public class VenueServiceImpl implements VenueService {
     }
 
     @Override
-    public List<ResponseVenueDTO> findVenuesByOwnerId(Long ownerId) {
+    public List<ResponseVenueBasicDTO> findVenuesByOwnerId(Long ownerId) {
         return venueRepository.findByOwnerId(ownerId)
                 .stream()
-                .map(venueMapper::toResponseDTO)
+                .map(venueMapper::toBasicDTO)
                 .collect(Collectors.toList());
     }
 
@@ -144,10 +150,14 @@ public class VenueServiceImpl implements VenueService {
                 Venue venue = venueRepository.findById(venueId)
                         .orElseThrow(() -> new VenueNotFoundException(VENUE_NOT_FOUND));
 
+                // Fetch user's full name from UserServiceClient
+                String fullName = userServiceClient.getUserFullName(userId);
+
                 // Map CreateRatingDTO to Rating and set the venue and userId
                 Rating rating = ratingMapper.toEntity(createRatingDTO);
                 rating.setVenue(venue);
                 rating.setUserId(userId);  // Set userId from JWT
+                rating.setFullName(fullName);  // Set the full name
                 ratingRepository.save(rating);
 
                 // Handle the case where ratingCount is null by treating it as 0 initially
@@ -163,7 +173,7 @@ public class VenueServiceImpl implements VenueService {
                 venueRepository.save(venue);
 
                 updated = true;
-                
+
                 // Use RatingMapper to create ResponseRatingDTO
                 return ratingMapper.toResponseRatingDTO(rating, venue);
             } catch (OptimisticLockException e) {
@@ -197,9 +207,16 @@ public class VenueServiceImpl implements VenueService {
 
     @Override
     public List<ResponseVenueBasicDTO> findAvailableVenues(String location, Venue.VenueType venueType, Timestamp reservedDate) {
-        List<Venue> venues = venueRepository.findAvailableVenues(location, venueType, reservedDate);
+ 
+        // Create a Specification based on the provided parameters
+        Specification<Venue> spec = VenueSpecifications.findAvailableVenues(location, venueType, reservedDate);
+
+        // Use findAll with the Specification to retrieve a list of Venue entities
+        List<Venue> venues = venueRepository.findAll(spec);
+
+        // Map each Venue entity to a ResponseVenueBasicDTO using your mapper
         return venues.stream()
-                    .map(venueMapper::toBasicDTO) // Use the new toBasicDTO method
-                    .collect(Collectors.toList());
+                     .map(venueMapper::toBasicDTO)
+                     .collect(Collectors.toList());
     }
 }

@@ -14,6 +14,7 @@ public interface RatingMapper {
     @Mapping(target = "id", ignore = true)  // ID is auto-generated
     @Mapping(target = "userId", ignore = true) 
     @Mapping(target = "venue", ignore = true)  // Venue will be set separately
+    @Mapping(target = "fullName", ignore = true)
     @Mapping(target = "timestamp", expression = "java(new java.sql.Timestamp(System.currentTimeMillis()))")
     Rating toEntity(CreateRatingDTO createRatingDTO);
 
@@ -24,5 +25,6 @@ public interface RatingMapper {
     @Mapping(source = "venue.averageRating", target = "newAverageRating")
     @Mapping(source = "venue.ratingCount", target = "newRatingCount")
     @Mapping(source = "rating.comment", target = "comment")
+    @Mapping(source = "rating.fullName", target = "fullName")
     ResponseRatingDTO toResponseRatingDTO(Rating rating, Venue venue);
 }

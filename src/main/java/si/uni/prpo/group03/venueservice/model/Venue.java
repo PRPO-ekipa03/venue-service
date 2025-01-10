@@ -80,7 +80,7 @@ public class Venue {
     private Long ownerId;
 
     @DecimalMin(value = "0.0", message = "Average rating cannot be negative")
-    @DecimalMax(value = "5.0", message = "Average rating cannot exceed 5")
+    @DecimalMax(value = "10.0", message = "Average rating cannot exceed 5")
     private Double averageRating;
 
     @Min(value = 0, message = "Rating count cannot be negative")
@@ -101,9 +101,22 @@ public class Venue {
         OUTDOOR_AREA,
         BANQUET_HALL,
         MEETING_ROOM,
-        AUDITORIUM
+        EVENT_SPACE,
+        AUDITORIUM,
+        WEDDING_HALL,
+        SPORTS_ARENA,
+        EXHIBITION_CENTER,
+        THEATER,
+        COWORKING_SPACE,
+        ROOFTOP_TERRACE,
+        PRIVATE_VILLA,
+        BEACHFRONT_AREA,
+        FARMHOUSE,
+        CLUBHOUSE,
+        STUDIO_SPACE,
+        OTHER
     }
-
+    
     // Getters and Setters
     public Long getId() {
         return id;
