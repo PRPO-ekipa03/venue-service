@@ -59,7 +59,7 @@ The microservice is built on a layered architecture:
 
 ### Clone the Repository
 ```bash
-git clone https://your-repository-url.git
+git clone https://github.com/PRPO-ekipa03/venue-service.git
 cd venueservice
 ```
 
