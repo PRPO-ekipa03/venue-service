@@ -1,26 +1,42 @@
 package si.uni.prpo.group03.venueservice.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 
+@Schema(description = "Response Data Transfer Object for rating details.")
 public class ResponseRatingDTO {
+
     @NotNull(message = "Id must be sent")
+    @Schema(description = "Unique identifier of the rating", example = "1")
     private Long ratingId;
+
+    @Schema(description = "Identifier of the venue being rated", example = "101")
     private Long venueId;
+
     @NotNull(message = "Rating must be given")
+    @Schema(description = "Value of the rating", example = "8.5")
     private Double ratingValue;
+
     @NotNull(message = "New average must be given")
+    @Schema(description = "New average rating of the venue after this rating", example = "4.6")
     private double newAverageRating;
+
     @NotNull(message = "New rating count must be given")
+    @Schema(description = "New total number of ratings for the venue", example = "15")
     private int newRatingCount;
+
     @NotNull(message = "User fullname must be given")
+    @Schema(description = "Full name of the user who provided the rating", example = "John Doe")
     private String fullName;
 
+    @Schema(description = "Optional comment provided by the user", example = "Great venue with excellent facilities.")
     private String comment; // Add comment here
-    
+
+    // Getters and Setters
     public String getFullName() {
         return fullName;
     }
-    
+
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }

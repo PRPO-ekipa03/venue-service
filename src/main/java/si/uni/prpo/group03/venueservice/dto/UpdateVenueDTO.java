@@ -1,5 +1,6 @@
 package si.uni.prpo.group03.venueservice.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -8,47 +9,64 @@ import java.util.List;
 import si.uni.prpo.group03.venueservice.model.Venue.VenueStatus;
 import si.uni.prpo.group03.venueservice.model.Venue.VenueType;
 
+@Schema(description = "Data Transfer Object for updating venue details.")
 public class UpdateVenueDTO {
 
     @Size(max = 100, message = "Venue name should not exceed 100 characters")
+    @Schema(description = "Name of the venue", maxLength = 100, example = "Grand Hall")
     private String name;
 
     @Size(max = 2000, message = "Description should not exceed 2000 characters")
+    @Schema(description = "Description of the venue", maxLength = 2000, example = "A spacious hall suitable for conferences and events.")
     private String description;
 
+    @Schema(description = "Location of the venue", example = "Ljubljana")
     private String location;
 
+    @Schema(description = "Address of the venue", example = "Preš 10, Ljubljana")
     private String address;
 
     @Min(value = 1, message = "Capacity must be at least 1")
+    @Schema(description = "Capacity of the venue", example = "300")
     private Integer capacity;
 
+    @Schema(description = "List of amenities available at the venue", example = "[\"WiFi\", \"Projector\", \"Sound System\"]")
     private List<String> amenities;
 
+    @Schema(description = "Current status of the venue", example = "AVAILABLE")
     private VenueStatus status;
 
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
+    @Schema(description = "Price per day for renting the venue", example = "150.00")
     private BigDecimal pricePerDay;
 
+    @Schema(description = "Opening time of the venue", example = "2023-08-15T08:00:00Z")
     private Timestamp openingTime;
 
+    @Schema(description = "Closing time of the venue", example = "2023-08-15T22:00:00Z")
     private Timestamp closingTime;
 
     @Email(message = "Invalid email format")
+    @Schema(description = "Contact email for the venue", example = "contact@venue.com")
     private String contactEmail;
 
     @Size(max = 15, message = "Contact phone number should not exceed 15 characters")
+    @Schema(description = "Contact phone number for the venue", maxLength = 15, example = "+38640123456")
     private String contactPhone;
 
+    @Schema(description = "List of photo URLs for the venue", example = "[\"http://example.com/photo1.jpg\", \"http://example.com/photo2.jpg\"]")
     private List<String> photos;
 
+    @Schema(description = "Type/category of the venue", example = "CONFERENCE_HALL")
     private VenueType venueType;
 
     @DecimalMin(value = "0.0", message = "Average rating cannot be negative")
     @DecimalMax(value = "5.0", message = "Average rating cannot exceed 5")
+    @Schema(description = "Average rating of the venue", example = "4.5")
     private Double averageRating;
 
     @Min(value = 0, message = "Rating count cannot be negative")
+    @Schema(description = "Total number of ratings for the venue", example = "10")
     private Integer ratingCount;
 
     // Getters and Setters
